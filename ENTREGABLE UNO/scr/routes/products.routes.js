@@ -1,17 +1,10 @@
-import ProductoData from './ProductManager.js';
-import express from 'express';
+import { Router } from 'express';
+import ProductoData from '../ProductManager.js';
 
-const PORT = 8080;
-const app =express();
+const appRouter= Router();
 const productsNews = new ProductoData();
 
-app.use(express.json());
-
-app.get('/', (req, res)=> {
-  res.send("Hola, buenas tardes")
-})
-
-app.get('/products', async (req,res)=> {
+appRouter.get('/', async (req,res)=> {
     const product = await productsNews.getProducts();
     
 
@@ -23,7 +16,7 @@ app.get('/products', async (req,res)=> {
       else {res.status(400).send("Error al cargar datos")}
   })
 
-app.get('/products/:pid', async (req, res)=> {
+appRouter.get('/:pid', async (req, res)=> {
     const {pid} = req.params;
     const product = await productsNews.getProductsById(parseInt(pid));
 
@@ -34,7 +27,7 @@ app.get('/products/:pid', async (req, res)=> {
     }
 });
 
-app.post('/products', async (req, res)=> {
+appRouter.post('/', async (req, res)=> {
   const {title, description, price, thumbnail, code, stock} = req.body;
   const product= await productsNews.addProducts(title, description, price, thumbnail, code, stock);
   
@@ -45,7 +38,7 @@ app.post('/products', async (req, res)=> {
   }
 });
 
-app.put('/products/:pid', async (req, res)=> {
+appRouter.put('/:pid', async (req, res)=> {
   const {pid} = req.params;
   const proData = req.body;
   const product = await productsNews.updateProduct(parseInt(pid), proData);
@@ -55,7 +48,7 @@ app.put('/products/:pid', async (req, res)=> {
   } else {res.status(400).send(product.message)}
 })
 
-app.delete('/products/:pid', async (req, res)=> {
+appRouter.delete('/:pid', async (req, res)=> {
   const {pid} = req.params;
   const product = await productsNews.deleteProducts(parseInt(pid));
 
@@ -64,7 +57,4 @@ app.delete('/products/:pid', async (req, res)=> {
   }else {res.status(400).send(product.message)}
 })
 
-
-app.listen(PORT, () => {
-  console.log(`Server on localhost:${PORT}`)
-})
+export default appRouter
