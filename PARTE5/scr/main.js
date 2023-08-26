@@ -52,8 +52,9 @@ app.get('/', async (req, res)=> {
     const prod = await fs.readFile(data, 'utf-8');
     const prodData = JSON.parse(prod);
     const products = prodData.products;
+    const prodActive = products.filter((prod)=> prod.status === true)
   
-    res.render('home', {products: products, styles:'estilos.css'})
+    res.render('home', {products: prodActive, styles:'estilos.css'})
   
   })
 
@@ -83,5 +84,7 @@ app.get('/', async (req, res)=> {
     const prodData = JSON.parse(prod);
     const products = prodData.products;
 
-  res.render('realTimeProducts', { products: products, styles: 'estilos.css' });
+    const prodActive = products.filter((prod)=> prod.status === true)
+
+  res.render('realTimeProducts', { products: prodActive, styles: 'estilos.css' });
   })
